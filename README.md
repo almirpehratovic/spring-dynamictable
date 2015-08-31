@@ -1,4 +1,4 @@
-# JEE and Spring application: Online cinema
+# Spring Dynamic data table
 ## Preface
 The main purpose of this project is to create data table that has pagination, sorting and search capabilities. All this features should be server based, or said in another words this table shouldn't get all data and then hide it, sorti it through JQuery; instead Spring MVC controller sends allready sorted, filtered and paginated data.
 
