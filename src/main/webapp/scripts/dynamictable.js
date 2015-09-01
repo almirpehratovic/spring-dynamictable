@@ -6,12 +6,15 @@ $(document).ready(function() {
 	
 	$('.oceanDynamicTable table').each(function(){
 			
-		var html;
+		var html, htmlBottom, noDataMessage, dataUrl, paginationLabelNext, paginationLabelPrev, searchIcon, orderBy, searchField;
+		var cnt=0, collectionSize, paginationFirst, paginationSize;
+		var pageSizes = [5,10,15,100,1000];
+		var prevButtonFunction, nextButtonFunction;
 		
 		// NO DATA MESSAGE
-		var collectionSize = parseInt($(this).attr('data-collectionSize'));
+		collectionSize = parseInt($(this).attr('data-collectionSize'));
 		if (collectionSize == 0){
-			var noDataMessage = $(this).attr('data-noDataMessage');
+			noDataMessage = $(this).attr('data-noDataMessage');
 			html = '<tr><td colspan="20">' + noDataMessage + '</td></tr>'; 
 			$(this).find('tbody').html(html);
 		}
@@ -21,19 +24,21 @@ $(document).ready(function() {
 		
 		// pagination
 		html += '<div class="pagination">';
-		var paginationFirst = parseInt(readCookie('paginationFirst','1'));
-		var paginationSize = parseInt($(this).attr('data-paginationSize'));
-		setCookie("paginationSize",paginationSize);
+		paginationFirst = parseInt(readCookie('paginationFirst','1'));
+		paginationSize = parseInt(readCookie('paginationSize','-1'));
+		if (paginationSize == -1){
+			paginationSize = parseInt($(this).attr('data-paginationSize'));
+			setCookie("paginationSize",paginationSize);
+		}
 		
-		var dataUrl = $(this).attr('data-dataUrl');
-		var paginationLabelNext = $(this).attr('data-paginationLabelNext');
-		var paginationLabelPrev = $(this).attr('data-paginationLabelPrev');
+		dataUrl = $(this).attr('data-dataUrl');
+		paginationLabelNext = $(this).attr('data-paginationLabelNext');
+		paginationLabelPrev = $(this).attr('data-paginationLabelPrev');
 		
 		html += '<input type="hidden" name="first" value="' + paginationFirst + '"/>';
 		
 		html += '<input type="submit" class="prev" value="' + paginationLabelPrev + '">' ;
 		
-		var prevButtonFunction;
 		if ((paginationFirst-paginationSize) > 0){
 			prevButtonFunction = function(){
 				$('.prev').click(function(){
@@ -47,9 +52,9 @@ $(document).ready(function() {
 				$('.prev').attr('disabled','disabled');
 			};
 		}
-		html += '<span>' + paginationFirst + '-' + (paginationFirst + paginationSize) + '</span>';
+		html += '<span class="current">' + paginationFirst + '-' + (paginationFirst + paginationSize) + '</span>';
 		html += '<input type="submit" class="next" value="' + paginationLabelNext + '">' ;
-		var nextButtonFunction;
+
 		if (collectionSize != 0){
 			nextButtonFunction = function(){
 				$('.next').click(function(){
@@ -64,12 +69,22 @@ $(document).ready(function() {
 				
 			};
 		}
+		html += '<select value="' + paginationSize + '">';
+		
+		for (cnt = 0; cnt < pageSizes.length; cnt++){
+			if (pageSizes[cnt] == paginationSize){
+				html += '<option value="' + pageSizes[cnt] + '" selected>' + pageSizes[cnt] + '</option>';
+			} else {
+				html += '<option value="' + pageSizes[cnt] + '">' + pageSizes[cnt] + '</option>';
+			}
+		}
+		html += '</select>';
 		html += '</div>'; 
 		
-		var htmlBottom = html + "</div>";
+		htmlBottom = html + "</div>";
 		
 		// search
-		var searchIcon = $(this).attr('data-searchIcon');
+		searchIcon = $(this).attr('data-searchIcon');
 		html += '<div class="search">';
 		
 		html += '<div class="filters">';
@@ -107,7 +122,7 @@ $(document).ready(function() {
 		
 		// SORT
 		$('.oceanDynamicTable th[data-search]').each(function(){
-			var orderBy = readCookie('orderBy', 'null');
+			orderBy = readCookie('orderBy', 'null');
 			if (orderBy != 'null' &&  orderBy.indexOf($(this).attr('data-search')) > -1){
 				if (orderBy.indexOf($(this).attr('data-search') + ' asc') > -1){
 					$(this).append('<span class="asc"></span>');
@@ -117,7 +132,7 @@ $(document).ready(function() {
 			}
 		});
 		$('.oceanDynamicTable th[data-search]').dblclick(function(){
-			var orderBy = readCookie('orderBy', 'null');
+			orderBy = readCookie('orderBy', 'null');
 			if (orderBy != 'null' &&  orderBy.indexOf($(this).attr('data-search')) > -1){
 				if (orderBy.indexOf($(this).attr('data-search') + ' asc') > -1){
 					setCookie('orderBy', $(this).attr('data-search') + ' desc');
@@ -140,7 +155,7 @@ $(document).ready(function() {
 		});
 		
 		$('.search input[name="searchValue"]').keyup(function(event){
-			var searchField = $('.search select[name="searchField"]').val();
+			searchField = $('.search select[name="searchField"]').val();
 			if(event.which == 13){
 				setCookie('searchField', searchField);
 				$(this).parents('form').submit();
@@ -152,9 +167,18 @@ $(document).ready(function() {
 		
 		$('.oceanDynamicTable .pagination .prev').button();
 		$('.oceanDynamicTable .pagination .next').button();
-		$('.oceanDynamicTable select').selectmenu({
+		
+		$('.oceanDynamicTable .search select').selectmenu({
 			change: function(event,data){
 				$('.search input').val(readCookie(data.item.value+'Search',''));
+			}
+		});
+		
+		$('.oceanDynamicTable .pagination select').selectmenu({
+			change: function(event,data){
+				setCookie("paginationSize",data.item.value);
+				setCookie('paginationFirst','1');
+				$(this).parents('form').submit();
 			}
 		});
 	});

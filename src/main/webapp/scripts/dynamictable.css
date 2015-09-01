@@ -66,9 +66,18 @@
 	/*float: left;*/
 }
 
-.oceanDynamicTable .pagination span{
+.oceanDynamicTable .pagination .current{
 	margin-left: 10px;
 	margin-right: 10px;
+}
+
+.oceanDynamicTable .pagination .ui-selectmenu-button {
+	vertical-align: top;
+	font-size: 1em;
+}
+
+.oceanDynamicTable .pagination select {
+	width: 100px;
 }
 
 .oceanDynamicTable .search {
