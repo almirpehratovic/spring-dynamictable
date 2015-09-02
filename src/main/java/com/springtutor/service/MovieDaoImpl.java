@@ -52,8 +52,11 @@ public class MovieDaoImpl implements MovieDao {
 		if (orderBy != null && orderBy.trim().length() > 0)
 			setOrder(cr, orderBy);
 		
-		cr.setFirstResult(first - 1);
-		cr.setMaxResults(size);
+		if (size != 0) {
+			cr.setFirstResult(first - 1);
+			cr.setMaxResults(size);
+		}
+		
 		return cr.list();
 	}
 

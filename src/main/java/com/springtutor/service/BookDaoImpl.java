@@ -34,8 +34,11 @@ public class BookDaoImpl implements BookDao{
 			setOrder(cr, orderBy);
 		}
 		
-		cr.setFirstResult(first-1);
-		cr.setMaxResults(size);
+		if (size != 0) {
+			cr.setFirstResult(first-1);
+			cr.setMaxResults(size);
+		}
+		
 		return cr.list();
 	}
 	

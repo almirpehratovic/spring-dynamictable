@@ -41,9 +41,9 @@ public class Table2Controller {
 		
 		if (!model.containsAttribute("books")) {
 			List<Book> books = bookDao.findAll(first,pageSize,title,description,orderBy);
-			double averagePrice = books.stream().mapToDouble(w -> w.getPrice()).average().getAsDouble();
-			double averageRating = books.stream().mapToDouble(w -> w.getRating()).average().getAsDouble();
-			int reviewersSum = books.stream().mapToInt(w -> w.getNumberOfReviewers()).sum();
+			double averagePrice = books.size() == 0 ? 0 : books.stream().mapToDouble(w -> w.getPrice()).average().getAsDouble();
+			double averageRating = books.size() == 0 ? 0 : books.stream().mapToDouble(w -> w.getRating()).average().getAsDouble();
+			int reviewersSum = books.size() == 0 ? 0 : books.stream().mapToInt(w -> w.getNumberOfReviewers()).sum();
 			model.addAttribute("books", books);
 			model.addAttribute("averagePrice", averagePrice);
 			model.addAttribute("averageRating", averageRating);
@@ -72,9 +72,9 @@ public class Table2Controller {
 		averagePrice = books.size() == 0 ? 0 : averagePrice / books.size();
 		averageRating = books.size() == 0 ? 0 : averageRating / books.size();*/
 		
-		double averagePrice = books.stream().mapToDouble(w -> w.getPrice()).average().getAsDouble();
-		double averageRating = books.stream().mapToDouble(w -> w.getRating()).average().getAsDouble();
-		int reviewersSum = books.stream().mapToInt(w -> w.getNumberOfReviewers()).sum();
+		double averagePrice = books.size() == 0 ? 0 : books.stream().mapToDouble(w -> w.getPrice()).average().getAsDouble();
+		double averageRating = books.size() == 0 ? 0 : books.stream().mapToDouble(w -> w.getRating()).average().getAsDouble();
+		int reviewersSum = books.size() == 0 ? 0 : books.stream().mapToInt(w -> w.getNumberOfReviewers()).sum();
 		
 		redirectAttributes.addFlashAttribute("books", books);
 		redirectAttributes.addFlashAttribute("averagePrice", averagePrice);

@@ -33,9 +33,18 @@ public class Book {
 	}
 	
 	@Column(name="title")
+	/**
+	 * 
+	 * @return Naslov knjige
+	 */
 	public String getTitle() {
 		return title;
 	}
+	
+	/**
+	 * 
+	 * @param title Naslov knjige
+	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}

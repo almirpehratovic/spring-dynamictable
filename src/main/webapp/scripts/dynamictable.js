@@ -8,7 +8,7 @@ $(document).ready(function() {
 			
 		var html, htmlBottom, noDataMessage, dataUrl, paginationLabelNext, paginationLabelPrev, searchIcon, orderBy, searchField;
 		var cnt=0, collectionSize, paginationFirst, paginationSize;
-		var pageSizes = [5,10,15,100,1000];
+		var pageSizes = [5,10,15,100,1000,0];
 		var prevButtonFunction, nextButtonFunction;
 		
 		// NO DATA MESSAGE
@@ -52,14 +52,24 @@ $(document).ready(function() {
 				$('.prev').attr('disabled','disabled');
 			};
 		}
-		html += '<span class="current">' + paginationFirst + '-' + (paginationFirst + paginationSize) + '</span>';
+		
+		if (paginationSize == 0){
+			html += '<span class="current">' + '1-' + collectionSize + '</span>';
+		} else {
+			if (paginationSize > collectionSize){
+				html += '<span class="current">' + paginationFirst + '-' + (paginationFirst + collectionSize - 1) + '</span>';
+			} else {
+				html += '<span class="current">' + paginationFirst + '-' + (paginationFirst + paginationSize - 1) + '</span>';
+			}
+			
+		}
+		
 		html += '<input type="submit" class="next" value="' + paginationLabelNext + '">' ;
 
-		if (collectionSize != 0){
+		if (collectionSize == paginationSize){
 			nextButtonFunction = function(){
 				$('.next').click(function(){
 					paginationFirst = paginationFirst+paginationSize;
-					//$('input[name="first"]').val(paginationFirst);
 					setCookie("paginationFirst",paginationFirst);
 				});
 			};
@@ -72,10 +82,17 @@ $(document).ready(function() {
 		html += '<select value="' + paginationSize + '">';
 		
 		for (cnt = 0; cnt < pageSizes.length; cnt++){
-			if (pageSizes[cnt] == paginationSize){
-				html += '<option value="' + pageSizes[cnt] + '" selected>' + pageSizes[cnt] + '</option>';
+			
+			if (pageSizes[cnt] == 0){
+				label = "ALL";
 			} else {
-				html += '<option value="' + pageSizes[cnt] + '">' + pageSizes[cnt] + '</option>';
+				label = pageSizes[cnt];
+			}
+			
+			if (pageSizes[cnt] == paginationSize){
+				html += '<option value="' + pageSizes[cnt] + '" selected>' + label + '</option>';
+			} else {
+				html += '<option value="' + pageSizes[cnt] + '">' + label + '</option>';
 			}
 		}
 		html += '</select>';
@@ -119,6 +136,11 @@ $(document).ready(function() {
 		
 		$(this).before(html);
 		$(this).after(html);
+		
+		// Hide aggregation row if there is a pagination
+		if (paginationSize != 0 && (paginationFirst!=1) || (paginationFirst==1 && collectionSize == paginationSize)){
+			$('td.aggr:eq(0)').parent('tr').remove();
+		}
 		
 		// SORT
 		$('.oceanDynamicTable th[data-search-property]').each(function(){
