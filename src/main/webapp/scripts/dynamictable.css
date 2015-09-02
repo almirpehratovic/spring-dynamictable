@@ -4,8 +4,8 @@
 }
 
 .oceanDynamicTable {
-	margin: 10px;
-	width: 100%;
+	margin: 1%;
+	width: 99%;
 }
 
 .oceanDynamicTable table {
@@ -123,6 +123,16 @@
 	padding: 5px;
 }
 
+.oceanDynamicTable td.num {
+	text-align: right;
+}
+
+.oceanDynamicTable td.aggr {
+	text-align: right;
+	font-weight: bold;
+	border-top: 3px double black;
+}
+
 
 @media (max-device-width : 480px), (max-width : 480px) {
 	.oceanDynamicTable .pagination {
@@ -160,6 +170,15 @@
 	.oceanDynamicTable tbody img {
 		width: 150px; 
 		height: 200px;
+	}
+	
+	.oceanDynamicTable td.num {
+		text-align: left;
+	}
+
+	.oceanDynamicTable td.aggr {
+		text-align: left;
+		border-top: none
 	}
 	
 	.oceanDynamicTable .mobileLabel {

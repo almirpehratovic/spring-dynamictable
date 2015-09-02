@@ -33,12 +33,13 @@ public class TableController {
 	public String showMoviesDefault(Model model,
 			@CookieValue(name="paginationSize",required=false,defaultValue="5") int pageSize,
 			@CookieValue(name="paginationFirst",required=false,defaultValue="1") int first,
+			@CookieValue(name="idSearch",required=false) String id,
 			@CookieValue(name="nameSearch",required=false) String name, 
 			@CookieValue(name="descriptionSearch",required=false) String description,
 			@CookieValue(name="orderBy",required=false) String orderBy) {
 		
 		if (!model.containsAttribute("movies")) {
-			model.addAttribute("movies", movieDao.findAll(first,pageSize,name,description,orderBy));
+			model.addAttribute("movies", movieDao.findAll(first,pageSize,id,name,description,orderBy));
 		}
 		return "default";
 	}
@@ -47,13 +48,14 @@ public class TableController {
 	public String showMoviesSearchPagination(
 			@CookieValue(name="paginationSize",required=false,defaultValue="5") int pageSize,
 			@CookieValue(name="paginationFirst",required=false,defaultValue="1") int first,
+			@CookieValue(name="idSearch",required=false) String id,
 			@CookieValue(name="nameSearch",required=false) String name, 
 			@CookieValue(name="descriptionSearch",required=false) String description,
 			@CookieValue(name="orderBy",required=false) String orderBy,
 			Model model,RedirectAttributes redirectAttributes) {
 		
 		System.out.println("ABC  post kontroler " + orderBy );
-		List<Movie> movies = movieDao.findAll(first,pageSize,name,description,orderBy);
+		List<Movie> movies = movieDao.findAll(first,pageSize,id,name,description,orderBy);
 		
 		redirectAttributes.addFlashAttribute("movies", movies);
 		return "redirect:/table";

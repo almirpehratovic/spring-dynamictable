@@ -88,20 +88,20 @@ $(document).ready(function() {
 		html += '<div class="search">';
 		
 		html += '<div class="filters">';
-		$('[data-search]').each(function(){
-			cookieValue = readCookie($(this).attr('data-search')+'Search','null');
+		$('[data-search-property]').each(function(){
+			cookieValue = readCookie($(this).attr('data-search-property')+'Search','null');
 			if (cookieValue != 'null' && cookieValue != ''){
-				html += $(this).attr('data-search') + '=' + cookieValue + '; ';
+				html += $(this).attr('data-search-property') + '=' + cookieValue + '; ';
 			}
 		});
 		html += '</div>';
 		
 		html += '<select name="searchField" value="' + readCookie('searchField','') + '">';
-		$('[data-search]').each(function(){
-			if (readCookie('searchField','') == $(this).attr('data-search')){
-				html += '<option value="' + $(this).attr('data-search') + '" selected>' + $(this).text() + '</option>';
+		$('[data-search-property]').each(function(){
+			if (readCookie('searchField','') == $(this).attr('data-search-property')){
+				html += '<option value="' + $(this).attr('data-search-property') + '" selected>' + $(this).text() + '</option>';
 			} else {
-				html += '<option value="' + $(this).attr('data-search') + '">' + $(this).text() + '</option>';
+				html += '<option value="' + $(this).attr('data-search-property') + '">' + $(this).text() + '</option>';
 			}
 		});
 		
@@ -121,26 +121,33 @@ $(document).ready(function() {
 		$(this).after(html);
 		
 		// SORT
-		$('.oceanDynamicTable th[data-search]').each(function(){
+		$('.oceanDynamicTable th[data-search-property]').each(function(){
 			orderBy = readCookie('orderBy', 'null');
-			if (orderBy != 'null' &&  orderBy.indexOf($(this).attr('data-search')) > -1){
-				if (orderBy.indexOf($(this).attr('data-search') + ' asc') > -1){
+			if (orderBy == 'null'){
+				$(this).parents('table[data-orderBy]').each(function(){
+					orderBy = $(this).attr('data-orderBy');
+					setCookie('orderBy', orderBy);
+				});
+			}
+			
+			if (orderBy != 'null' &&  orderBy.indexOf($(this).attr('data-search-property')) > -1){
+				if (orderBy.indexOf($(this).attr('data-search-property') + ' asc') > -1){
 					$(this).append('<span class="asc"></span>');
 				} else {
 					$(this).append('<span class="desc"></span>');
 				}
 			}
 		});
-		$('.oceanDynamicTable th[data-search]').dblclick(function(){
+		$('.oceanDynamicTable th[data-search-property]').dblclick(function(){
 			orderBy = readCookie('orderBy', 'null');
-			if (orderBy != 'null' &&  orderBy.indexOf($(this).attr('data-search')) > -1){
-				if (orderBy.indexOf($(this).attr('data-search') + ' asc') > -1){
-					setCookie('orderBy', $(this).attr('data-search') + ' desc');
+			if (orderBy != 'null' &&  orderBy.indexOf($(this).attr('data-search-property')) > -1){
+				if (orderBy.indexOf($(this).attr('data-search-property') + ' asc') > -1){
+					setCookie('orderBy', $(this).attr('data-search-property') + ' desc');
 				} else {
-					setCookie('orderBy', $(this).attr('data-search') + ' asc');
+					setCookie('orderBy', $(this).attr('data-search-property') + ' asc');
 				}
 			} else {
-				setCookie('orderBy', $(this).attr('data-search') + ' asc');
+				setCookie('orderBy', $(this).attr('data-search-property') + ' asc');
 			}
 			
 			$('.searchForm:eq(0)').submit();

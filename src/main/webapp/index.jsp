@@ -12,6 +12,9 @@
 	</head> 
 	<body>
 		<c:url value="/table" var="tableUrl1" />
-		<a href="${tableUrl1}">Dinamička tabela</a>
+		<c:url value="/table2" var="tableUrl2" />
+		
+		<p><a href="${tableUrl1}">Dynamic Table example 1</a></p>
+		<p><a href="${tableUrl2}">Dynamic Table example 2</a></p>
 	</body>
 </html>

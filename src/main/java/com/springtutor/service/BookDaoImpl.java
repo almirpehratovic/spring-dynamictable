@@ -10,66 +10,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.springtutor.model.Movie;
+import com.springtutor.model.Book;
 
-@Service("movieDao")
 @Transactional
-public class MovieDaoImpl implements MovieDao {
-
+@Service("bookDao")
+public class BookDaoImpl implements BookDao{
 	private SessionFactory sessionFactory;
-
+	
 	@Override
-	@Transactional(readOnly = true)
-	public List<Movie> findAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("select m from Movie m").list();
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public List<Movie> findAll(int first, int size, String id, String name,
+	public List<Book> findAll(int first, int size, String title,
 			String description, String orderBy) {
-		Criteria cr = sessionFactory.getCurrentSession().createCriteria(
-				Movie.class);
+		Criteria cr = sessionFactory.getCurrentSession().createCriteria(Book.class);
 		
-		if (id != null && id.trim().length() > 0) {
-			try {
-				cr.add(Restrictions.eq("id", Integer.parseInt(id)));
-			} catch (Exception e) {
-				
-			}
-			
-		}
-
-		if (name != null && name.trim().length() > 0) {
-			cr.add(Restrictions.ilike("name", name));
+		if (title != null && title.trim().length() > 0) {
+			cr.add(Restrictions.ilike("title", title));
 		}
 
 		if (description != null && description.trim().length() > 0) {
 			cr.add(Restrictions.ilike("description", description));
 		}
 		
-		if (orderBy != null && orderBy.trim().length() > 0)
+		if (orderBy != null && orderBy.trim().length() > 0) {
 			setOrder(cr, orderBy);
+		}
 		
-		cr.setFirstResult(first - 1);
+		cr.setFirstResult(first-1);
 		cr.setMaxResults(size);
 		return cr.list();
 	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public Movie findById(int id) {
-		return (Movie) sessionFactory.getCurrentSession()
-				.createQuery("select m from Movie m where m.id=:id")
-				.setParameter("id", id).uniqueResult();
-	}
-
+	
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-
+	
 	public void setOrder(Criteria criteria, String orderBy) {
 		// id asc,name desc
 		System.out.println("ABC setOrder metod( " + orderBy);
@@ -90,5 +64,5 @@ public class MovieDaoImpl implements MovieDao {
 
 		}
 	}
-
+	
 }
