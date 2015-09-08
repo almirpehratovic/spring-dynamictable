@@ -41,9 +41,9 @@
 		 			data-searchIcon="${urlSearchIcon}" data-noDataMessage="No data" >
 		 		<thead>
 		 			<tr>
-		 				<th data-search="id">No</th>
-		 				<th data-search="name">Name</th>
-		 				<th data-search="description">Description</th>
+		 				<th data-search-property="id">No</th>
+		 				<th data-search-property="name">Name</th>
+		 				<th data-search-property="description">Description</th>
 		 				<th>Poster</th>
 		 			</tr>
 		 		</thead>

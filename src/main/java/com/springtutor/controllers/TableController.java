@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.springtutor.model.Book;
 import com.springtutor.model.Movie;
 import com.springtutor.service.MovieDao;
 
@@ -30,32 +31,26 @@ public class TableController {
 	// and another is POST method that works with pagination and search
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public String showMoviesDefault(Model model,
-			@CookieValue(name="paginationSize",required=false,defaultValue="5") int pageSize,
-			@CookieValue(name="paginationFirst",required=false,defaultValue="1") int first,
-			@CookieValue(name="idSearch",required=false) String id,
-			@CookieValue(name="nameSearch",required=false) String name, 
-			@CookieValue(name="descriptionSearch",required=false) String description,
-			@CookieValue(name="orderBy",required=false) String orderBy) {
+	public String showMoviesDefault(Model model, HttpServletRequest request) {
 		
+			
 		if (!model.containsAttribute("movies")) {
-			model.addAttribute("movies", movieDao.findAll(first,pageSize,id,name,description,orderBy));
+			OceanDynamicTable odt = new OceanDynamicTable(request);
+			model.addAttribute("movies", movieDao.findAll(odt.getPaginationFirst(),odt.getPaginationSize(),
+					odt.getSearchAttribute("id"),odt.getSearchAttribute("name"),odt.getSearchAttribute("description"),
+					odt.getOrderBy()));
 		}
 		return "default";
 	}
 	
 	@RequestMapping(value="/getMovies",method=RequestMethod.POST)
-	public String showMoviesSearchPagination(
-			@CookieValue(name="paginationSize",required=false,defaultValue="5") int pageSize,
-			@CookieValue(name="paginationFirst",required=false,defaultValue="1") int first,
-			@CookieValue(name="idSearch",required=false) String id,
-			@CookieValue(name="nameSearch",required=false) String name, 
-			@CookieValue(name="descriptionSearch",required=false) String description,
-			@CookieValue(name="orderBy",required=false) String orderBy,
-			Model model,RedirectAttributes redirectAttributes) {
+	public String showMoviesSearchPagination(Model model,RedirectAttributes redirectAttributes,HttpServletRequest request) {
 		
-		System.out.println("ABC  post kontroler " + orderBy );
-		List<Movie> movies = movieDao.findAll(first,pageSize,id,name,description,orderBy);
+		//System.out.println("ABC  post kontroler " + orderBy );
+		OceanDynamicTable odt = new OceanDynamicTable(request);
+		List<Movie> movies = movieDao.findAll(odt.getPaginationFirst(),odt.getPaginationSize(),
+				odt.getSearchAttribute("id"),odt.getSearchAttribute("name"),odt.getSearchAttribute("description"),
+				odt.getOrderBy());
 		
 		redirectAttributes.addFlashAttribute("movies", movies);
 		return "redirect:/table";

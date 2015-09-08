@@ -1,7 +1,11 @@
 package com.springtutor.controllers;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,23 +28,21 @@ import com.springtutor.service.MovieDao;
 
 @Controller
 @RequestMapping("/table2")
-public class Table2Controller {
-	private final int PAGE_SIZE = 5;
+public class Table2Controller{
 	private BookDao bookDao;
 	
 	// For each collection of data there has to be two methods. First method is default method which serves GET request,
 	// and another is POST method that works with pagination and search
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public String showBooksDefault(Model model,
-			@CookieValue(name="paginationSize",required=false,defaultValue="5") int pageSize,
-			@CookieValue(name="paginationFirst",required=false,defaultValue="1") int first,
-			@CookieValue(name="titleSearch",required=false) String title, 
-			@CookieValue(name="descriptionSearch",required=false) String description,
-			@CookieValue(name="orderBy",required=false) String orderBy) {
-		
+	public String showBooksDefault(Model model,HttpServletRequest request) {
+
 		if (!model.containsAttribute("books")) {
-			List<Book> books = bookDao.findAll(first,pageSize,title,description,orderBy);
+			OceanDynamicTable odt = new OceanDynamicTable(request);
+			List<Book> books = bookDao.findAll(odt.getPaginationFirst(),odt.getPaginationSize(),
+					odt.getSearchAttribute("title"),odt.getSearchAttribute("description"),
+					odt.getOrderBy());
+			
 			double averagePrice = books.size() == 0 ? 0 : books.stream().mapToDouble(w -> w.getPrice()).average().getAsDouble();
 			double averageRating = books.size() == 0 ? 0 : books.stream().mapToDouble(w -> w.getRating()).average().getAsDouble();
 			int reviewersSum = books.size() == 0 ? 0 : books.stream().mapToInt(w -> w.getNumberOfReviewers()).sum();
@@ -48,29 +50,22 @@ public class Table2Controller {
 			model.addAttribute("averagePrice", averagePrice);
 			model.addAttribute("averageRating", averageRating);
 			model.addAttribute("sumReviewers", reviewersSum);
+			if (odt.getSelectedObjectId() != null && odt.getSelectedObjectId().length() > 0) {
+				Book book = bookDao.findById(Integer.parseInt(odt.getSelectedObjectId()));
+				model.addAttribute("book",book);
+			}
 		}
 		return "books";
 	}
 	
 	@RequestMapping(value="/getBooks",method=RequestMethod.POST)
-	public String showMoviesSearchPagination(
-			@CookieValue(name="paginationSize",required=false,defaultValue="5") int pageSize,
-			@CookieValue(name="paginationFirst",required=false,defaultValue="1") int first,
-			@CookieValue(name="titleSearch",required=false) String title, 
-			@CookieValue(name="descriptionSearch",required=false) String description,
-			@CookieValue(name="orderBy",required=false) String orderBy,
-			Model model,RedirectAttributes redirectAttributes) {
+	public String showMoviesSearchPagination(Model model,RedirectAttributes redirectAttributes,HttpServletRequest request) {
 		
-		List<Book> books = bookDao.findAll(first,pageSize,title,description,orderBy);
+		OceanDynamicTable odt = new OceanDynamicTable(request);
+		List<Book> books = bookDao.findAll(odt.getPaginationFirst(),odt.getPaginationSize(),
+				odt.getSearchAttribute("title"),odt.getSearchAttribute("description"),
+				odt.getOrderBy());
 		
-		/*double averagePrice = 0; double averageRating = 0; double reviewersSum = 0;
-		for (Book book : books) {
-			averagePrice += book.getPrice();
-			averageRating += book.getRating();
-			reviewersSum += book.getNumberOfReviewers();
-		}
-		averagePrice = books.size() == 0 ? 0 : averagePrice / books.size();
-		averageRating = books.size() == 0 ? 0 : averageRating / books.size();*/
 		
 		double averagePrice = books.size() == 0 ? 0 : books.stream().mapToDouble(w -> w.getPrice()).average().getAsDouble();
 		double averageRating = books.size() == 0 ? 0 : books.stream().mapToDouble(w -> w.getRating()).average().getAsDouble();
@@ -80,6 +75,11 @@ public class Table2Controller {
 		redirectAttributes.addFlashAttribute("averagePrice", averagePrice);
 		redirectAttributes.addFlashAttribute("averageRating", averageRating);
 		redirectAttributes.addFlashAttribute("sumReviewers", reviewersSum);
+		
+		if (odt.getSelectedObjectId() != null && odt.getSelectedObjectId().length() > 0) {
+			Book book = bookDao.findById(Integer.parseInt(odt.getSelectedObjectId()));
+			redirectAttributes.addFlashAttribute("book",book);
+		}
 		
 		return "redirect:/table2";
 	}

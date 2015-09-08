@@ -133,6 +133,29 @@
 	border-top: 3px double black;
 }
 
+.oceanDynamicTable tr.selected {
+	background-color: yellow;	
+}
+
+.oceanDynamicForm {
+	display: none;
+}
+
+.oceanDynamicForm fieldset{
+	border: none;
+	padding: 5px;
+}
+
+.oceanDynamicForm label {
+	vertical-align: top;
+	display: inline-block;
+	width: 25%;
+}
+
+.oceanDynamicForm input, .oceanDynamicForm textarea{
+	width: 70%;
+}
+
 
 @media (max-device-width : 480px), (max-width : 480px) {
 	.oceanDynamicTable .pagination {
@@ -189,4 +212,21 @@
 		margin-right: 1em;
 	}
 	
+	.oceanDynamicForm label {
+		display: block;
+	}
+
+	.oceanDynamicForm input, .oceanDynamicForm textarea{
+		width: 95%;
+	}
+	
+}
+
+@media print {
+	.oceanDynamicTable .pagination, .oceanDynamicTable .searchInput, .oceanDynamicTable .ui-selectmenu-button {
+		display: none !important;
+	}
+	.oceanDynamicTable .ui-widget-header {
+		border: none !important;
+	}	
 }

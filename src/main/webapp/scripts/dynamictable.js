@@ -6,7 +6,8 @@ $(document).ready(function() {
 	
 	$('.oceanDynamicTable table').each(function(){
 			
-		var html, htmlBottom, noDataMessage, dataUrl, paginationLabelNext, paginationLabelPrev, searchIcon, orderBy, searchField;
+		var html, htmlBottom, noDataMessage, dataUrl, paginationLabelNext, paginationLabelPrev, searchIcon, orderBy, 
+		    searchField, selectedObject;
 		var cnt=0, collectionSize, paginationFirst, paginationSize;
 		var pageSizes = [5,10,15,100,1000,0];
 		var prevButtonFunction, nextButtonFunction;
@@ -210,6 +211,17 @@ $(document).ready(function() {
 				$(this).parents('form').submit();
 			}
 		});
+		
+		// SELECT COLUMNS
+		$(this).find('td[data-link]').each(function(){
+			$(this).html('<a href="javascript:selectObject(' + $(this).attr('data-link') + ')">'+$(this).text() + '</a>');
+		});
+		
+		selectedObject = readCookie('selectedObject','null');
+		if (selectedObject != 'null'){
+			showForm(selectedObject);
+		}
+		
 	});
 	
 	// TABLE REFLOW
@@ -217,8 +229,6 @@ $(document).ready(function() {
 	$(window).resize(function(){
 		reflowTable();
 	});
-	
-	
 	
 });
 
@@ -232,6 +242,34 @@ var reflowTable = function(){
 			$(this).prepend('<span class="mobileLabel">' + $(header).text() + ':</span>');
 		});
 	}
+}
+
+var selectObject = function(objectId){
+	setCookie('selectedObject',objectId);
+	$('form:eq(0)').submit();
+}
+
+var showForm = function(objectId){
+	
+	var w = $(window).width()*0.7;
+	if ($(window).width() <= 480){
+		w = $(window).width()*0.9;
+	}
+	
+	$('.oceanDynamicTable tbody td[data-link="' + objectId + '"]').each(function(){
+		$(this).parent().addClass('selected');
+	});
+	$('.oceanDynamicForm').dialog({
+		title: 'Edit',
+		modal: true,
+		width: w,
+		beforeClose: function(event,ui){
+			$('.oceanDynamicTable tbody tr[class="selected"]').each(function(){
+				$(this).removeClass('selected');
+				$.removeCookie("selectedObject");
+			});
+		}
+	});
 }
 
 var readCookie = function(cookieName,defaultValue){

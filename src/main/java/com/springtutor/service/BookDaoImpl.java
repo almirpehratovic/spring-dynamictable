@@ -67,5 +67,10 @@ public class BookDaoImpl implements BookDao{
 
 		}
 	}
+
+	@Override
+	public Book findById(int id) {
+		return (Book) sessionFactory.getCurrentSession().createQuery("select b from Book b where id=:id").setParameter("id",id).uniqueResult();
+	}
 	
 }

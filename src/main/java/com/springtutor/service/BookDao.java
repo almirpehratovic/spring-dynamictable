@@ -5,5 +5,6 @@ import java.util.List;
 import com.springtutor.model.Book;
 
 public interface BookDao {
+	Book findById(int id);
 	List<Book> findAll(int first, int size, String title, String description, String orderBy);
 }
