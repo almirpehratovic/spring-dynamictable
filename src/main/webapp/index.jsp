@@ -15,12 +15,10 @@
 		<script src="${cookieScript}"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
-				//$.cookie(cookieName,cookieValue);
-				$.removeCookie("paginationSize");
-				$.removeCookie("paginationFirst");
-				$.removeCookie("orderBy");
-				$.removeCookie("searchField");
-				$.removeCookie("searchValue");
+				for (cookie in $.cookie()){
+					if (cookie.indexOf('odt-') != -1)
+						$.removeCookie(cookie,{ path: '/' });
+				}
 			});
 		</script>
 	</head> 

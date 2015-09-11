@@ -3,6 +3,7 @@ package com.springtutor.controllers;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -31,11 +32,11 @@ public class TableController {
 	// and another is POST method that works with pagination and search
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public String showMoviesDefault(Model model, HttpServletRequest request) {
+	public String showMoviesDefault(Model model, HttpServletRequest request,HttpServletResponse response) {
 		
 			
 		if (!model.containsAttribute("movies")) {
-			OceanDynamicTable odt = new OceanDynamicTable(request);
+			OceanDynamicTable odt = new OceanDynamicTable(request,response);
 			model.addAttribute("movies", movieDao.findAll(odt.getPaginationFirst(),odt.getPaginationSize(),
 					odt.getSearchAttribute("id"),odt.getSearchAttribute("name"),odt.getSearchAttribute("description"),
 					odt.getOrderBy()));
@@ -44,10 +45,10 @@ public class TableController {
 	}
 	
 	@RequestMapping(value="/getMovies",method=RequestMethod.POST)
-	public String showMoviesSearchPagination(Model model,RedirectAttributes redirectAttributes,HttpServletRequest request) {
+	public String showMoviesSearchPagination(Model model,RedirectAttributes redirectAttributes,HttpServletRequest request,HttpServletResponse response) {
 		
 		//System.out.println("ABC  post kontroler " + orderBy );
-		OceanDynamicTable odt = new OceanDynamicTable(request);
+		OceanDynamicTable odt = new OceanDynamicTable(request,response);
 		List<Movie> movies = movieDao.findAll(odt.getPaginationFirst(),odt.getPaginationSize(),
 				odt.getSearchAttribute("id"),odt.getSearchAttribute("name"),odt.getSearchAttribute("description"),
 				odt.getOrderBy());

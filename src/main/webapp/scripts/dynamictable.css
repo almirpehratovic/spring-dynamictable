@@ -156,6 +156,41 @@
 	width: 70%;
 }
 
+.oceanDynamicTable .error {
+	font-weight: bold;
+	color: red;
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+
+.oceanDynamicTable .normal {
+	font-weight: bold;
+	color: black;
+	margin: 5px;
+	margin-bottom: 20px;
+}
+
+.oceanDynamicForm .error {
+	font-weight: bold;
+	color: red;
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+
+.oceanDynamicForm .validationError {
+	font-weight: bold;
+	color: red;
+	margin-left: 26%;
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+
+.oceanDynamicForm .normal {
+	font-weight: bold;
+	color: black;
+	margin: 5px;
+	margin-bottom: 20px;
+}
 
 @media (max-device-width : 480px), (max-width : 480px) {
 	.oceanDynamicTable .pagination {
@@ -214,10 +249,15 @@
 	
 	.oceanDynamicForm label {
 		display: block;
+		width: 90%;
 	}
 
 	.oceanDynamicForm input, .oceanDynamicForm textarea{
 		width: 95%;
+	}
+	
+	.oceanDynamicForm .validationError {
+		margin-left: 0;
 	}
 	
 }

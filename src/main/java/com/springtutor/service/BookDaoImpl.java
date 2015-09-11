@@ -1,8 +1,11 @@
 package com.springtutor.service;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.QueryException;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -18,7 +21,7 @@ public class BookDaoImpl implements BookDao{
 	private SessionFactory sessionFactory;
 	
 	@Override
-	public List<Book> findAll(int first, int size, String title,
+	public List<Book> find(int first, int size, String title,
 			String description, String orderBy) {
 		Criteria cr = sessionFactory.getCurrentSession().createCriteria(Book.class);
 		
@@ -71,6 +74,41 @@ public class BookDaoImpl implements BookDao{
 	@Override
 	public Book findById(int id) {
 		return (Book) sessionFactory.getCurrentSession().createQuery("select b from Book b where id=:id").setParameter("id",id).uniqueResult();
+	}
+
+	@Override
+	public Book save(Book book) {
+		sessionFactory.getCurrentSession().saveOrUpdate(book);
+		return book;
+	}
+
+	@Override
+	public void delete(Book book) {
+		sessionFactory.getCurrentSession().delete(book);
+		
+	}
+
+	@Override
+	public List<Book> find(String HQL) throws QueryException{
+		List<Book> books = books = new ArrayList<Book>();
+		try {
+			books = sessionFactory.getCurrentSession().createQuery("select o from Book o where " + HQL).list();
+		} catch (QueryException e) {
+			QueryException queryException = new QueryException("HQL Error. Valid properties are " + 
+						getAvaliableQueryProperties(Book.class) + ". Error text " + e.getMessage());
+			throw queryException;
+		}
+		return books;
+	}
+	
+	private List<String> getAvaliableQueryProperties(Class<?> cls) {
+		List<String> props = new ArrayList<String>();
+		for (Method method : cls.getDeclaredMethods()) {
+			if (method.getName().startsWith("get") && method.getName().length() > 3) {
+				props.add("o." + method.getName().substring(3,4).toLowerCase() +  method.getName().substring(4));
+			}
+		}
+		return props;
 	}
 	
 }

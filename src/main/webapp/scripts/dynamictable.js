@@ -7,15 +7,15 @@ $(document).ready(function() {
 	$('.oceanDynamicTable table').each(function(){
 			
 		var html, htmlBottom, noDataMessage, dataUrl, paginationLabelNext, paginationLabelPrev, searchIcon, orderBy, 
-		    searchField, selectedObject;
+		    searchField, selectedObject, searchValue;
 		var cnt=0, collectionSize, paginationFirst, paginationSize;
 		var pageSizes = [5,10,15,100,1000,0];
 		var prevButtonFunction, nextButtonFunction;
 		
 		// NO DATA MESSAGE
-		collectionSize = parseInt($(this).attr('data-collectionSize'));
+		collectionSize = parseInt($(this).attr('ocean-collectionSize'));
 		if (collectionSize == 0){
-			noDataMessage = $(this).attr('data-noDataMessage');
+			noDataMessage = $(this).attr('ocean-noDataMessage');
 			html = '<tr><td colspan="20">' + noDataMessage + '</td></tr>'; 
 			$(this).find('tbody').html(html);
 		}
@@ -28,17 +28,18 @@ $(document).ready(function() {
 		paginationFirst = parseInt(readCookie('paginationFirst','1'));
 		paginationSize = parseInt(readCookie('paginationSize','-1'));
 		if (paginationSize == -1){
-			paginationSize = parseInt($(this).attr('data-paginationSize'));
+			paginationSize = parseInt($(this).attr('ocean-paginationSize'));
 			setCookie("paginationSize",paginationSize);
 		}
 		
-		dataUrl = $(this).attr('data-dataUrl');
-		paginationLabelNext = $(this).attr('data-paginationLabelNext');
-		paginationLabelPrev = $(this).attr('data-paginationLabelPrev');
+		dataUrl = $(this).attr('ocean-dataUrl');
+		paginationLabelNext = $(this).attr('ocean-paginationLabelNext');
+		paginationLabelPrev = $(this).attr('ocean-paginationLabelPrev');
+		paginationLabelNew = $(this).attr('ocean-paginationLabelNew');
 		
 		html += '<input type="hidden" name="first" value="' + paginationFirst + '"/>';
 		
-		html += '<input type="submit" class="prev" value="' + paginationLabelPrev + '">' ;
+		html += '<input type="submit" class="prev" value="' + paginationLabelPrev + '"/>' ;
 		
 		if ((paginationFirst-paginationSize) > 0){
 			prevButtonFunction = function(){
@@ -65,7 +66,7 @@ $(document).ready(function() {
 			
 		}
 		
-		html += '<input type="submit" class="next" value="' + paginationLabelNext + '">' ;
+		html += '<input type="submit" class="next" value="' + paginationLabelNext + '"/>' ;
 
 		if (collectionSize == paginationSize){
 			nextButtonFunction = function(){
@@ -97,31 +98,44 @@ $(document).ready(function() {
 			}
 		}
 		html += '</select>';
+		
+		html += '<button class="new">' + paginationLabelNew + '</button>' ;
+		
 		html += '</div>'; 
 		
 		htmlBottom = html + "</div>";
 		
 		// search
-		searchIcon = $(this).attr('data-searchIcon');
+		searchIcon = $(this).attr('ocean-searchIcon');
 		html += '<div class="search">';
 		
 		html += '<div class="filters">';
-		$('[data-search-property]').each(function(){
-			cookieValue = readCookie($(this).attr('data-search-property')+'Search','null');
-			if (cookieValue != 'null' && cookieValue != ''){
-				html += $(this).attr('data-search-property') + '=' + cookieValue + '; ';
-			}
-		});
+		if (readCookie('HQLSearch','null') != 'null'){
+			html += readCookie('HQLSearch','null');
+		} else {
+			$('[ocean-search-property]').each(function(){
+				cookieValue = readCookie($(this).attr('ocean-search-property')+'Search','null');
+				if (cookieValue != 'null' && cookieValue != ''){
+					html += $(this).attr('ocean-search-property') + '=' + cookieValue + '; ';
+				}
+			});
+		}
 		html += '</div>';
 		
 		html += '<select name="searchField" value="' + readCookie('searchField','') + '">';
-		$('[data-search-property]').each(function(){
-			if (readCookie('searchField','') == $(this).attr('data-search-property')){
-				html += '<option value="' + $(this).attr('data-search-property') + '" selected>' + $(this).text() + '</option>';
+		$('[ocean-search-property]').each(function(){
+			if (readCookie('searchField','') == $(this).attr('ocean-search-property')){
+				html += '<option value="' + $(this).attr('ocean-search-property') + '" selected>' + $(this).text() + '</option>';
 			} else {
-				html += '<option value="' + $(this).attr('data-search-property') + '">' + $(this).text() + '</option>';
+				html += '<option value="' + $(this).attr('ocean-search-property') + '">' + $(this).text() + '</option>';
 			}
 		});
+		
+		if (readCookie('searchField','') == 'HQL'){
+			html += '<option value="HQL" selected>HQL</option>';
+		} else {
+			html += '<option value="HQL">HQL</option>';
+		}
 		
 		html += '</select>';
 		html += '<div class="searchInput">';
@@ -144,33 +158,33 @@ $(document).ready(function() {
 		}
 		
 		// SORT
-		$('.oceanDynamicTable th[data-search-property]').each(function(){
+		$('.oceanDynamicTable th[ocean-search-property]').each(function(){
 			orderBy = readCookie('orderBy', 'null');
 			if (orderBy == 'null'){
-				$(this).parents('table[data-orderBy]').each(function(){
-					orderBy = $(this).attr('data-orderBy');
+				$(this).parents('table[ocean-orderBy]').each(function(){
+					orderBy = $(this).attr('ocean-orderBy');
 					setCookie('orderBy', orderBy);
 				});
 			}
 			
-			if (orderBy != 'null' &&  orderBy.indexOf($(this).attr('data-search-property')) > -1){
-				if (orderBy.indexOf($(this).attr('data-search-property') + ' asc') > -1){
+			if (orderBy != 'null' &&  orderBy.indexOf($(this).attr('ocean-search-property')) > -1){
+				if (orderBy.indexOf($(this).attr('ocean-search-property') + ' asc') > -1){
 					$(this).append('<span class="asc"></span>');
 				} else {
 					$(this).append('<span class="desc"></span>');
 				}
 			}
 		});
-		$('.oceanDynamicTable th[data-search-property]').dblclick(function(){
+		$('.oceanDynamicTable th[ocean-search-property]').dblclick(function(){
 			orderBy = readCookie('orderBy', 'null');
-			if (orderBy != 'null' &&  orderBy.indexOf($(this).attr('data-search-property')) > -1){
-				if (orderBy.indexOf($(this).attr('data-search-property') + ' asc') > -1){
-					setCookie('orderBy', $(this).attr('data-search-property') + ' desc');
+			if (orderBy != 'null' &&  orderBy.indexOf($(this).attr('ocean-search-property')) > -1){
+				if (orderBy.indexOf($(this).attr('ocean-search-property') + ' asc') > -1){
+					setCookie('orderBy', $(this).attr('ocean-search-property') + ' desc');
 				} else {
-					setCookie('orderBy', $(this).attr('data-search-property') + ' asc');
+					setCookie('orderBy', $(this).attr('ocean-search-property') + ' asc');
 				}
 			} else {
-				setCookie('orderBy', $(this).attr('data-search-property') + ' asc');
+				setCookie('orderBy', $(this).attr('ocean-search-property') + ' asc');
 			}
 			
 			$('.searchForm:eq(0)').submit();
@@ -180,30 +194,36 @@ $(document).ready(function() {
 		nextButtonFunction();
 		
 		$('.search .searchLink').click(function(){
-			setCookie('searchField', $('.search select[name="searchField"]').val());
+			searchField = $('.search select[name="searchField"]').val();
+			searchValue = $('.search input[name="searchValue"]').val();
+			setCookie('searchField', searchField);
+			setCookie(searchField + 'Search', searchValue);
+			setCookie('searchValue', searchValue);
 			$(this).parents('form').submit();
 		});
 		
-		$('.search input[name="searchValue"]').keyup(function(event){
-			searchField = $('.search select[name="searchField"]').val();
+		$('.search input[name="searchValue"]').keypress(function(event){
 			if(event.which == 13){
+				searchField = $('.search select[name="searchField"]').val();
 				setCookie('searchField', searchField);
-				$(this).parents('form').submit();
-			} else {
 				setCookie('searchValue', $(this).val());
 				setCookie(searchField + 'Search', $(this).val());
+				$(this).parents('form').submit();
 			}
         });
 		
 		$('.oceanDynamicTable .pagination .prev').button();
 		$('.oceanDynamicTable .pagination .next').button();
+		$('.oceanDynamicTable .pagination .new').button();
 		
 		$('.oceanDynamicTable .search select').selectmenu({
 			change: function(event,data){
 				$('.search input').val(readCookie(data.item.value+'Search',''));
+				$(this).val(data.item.value);
 			}
 		});
 		
+		// page size
 		$('.oceanDynamicTable .pagination select').selectmenu({
 			change: function(event,data){
 				setCookie("paginationSize",data.item.value);
@@ -212,15 +232,26 @@ $(document).ready(function() {
 			}
 		});
 		
-		// SELECT COLUMNS
-		$(this).find('td[data-link]').each(function(){
-			$(this).html('<a href="javascript:selectObject(' + $(this).attr('data-link') + ')">'+$(this).text() + '</a>');
+		// EDIT, DELETE, INSERT
+		$(this).find('td[ocean-link]').each(function(){
+			$(this).html('<a href="javascript:selectObject(' + $(this).attr('ocean-link') + ')">'+$(this).text() + '</a>');
 		});
 		
 		selectedObject = readCookie('selectedObject','null');
 		if (selectedObject != 'null'){
 			showForm(selectedObject);
 		}
+		
+		$('.oceanDynamicForm .deleteButton').click(function(){
+			var result = confirm($(this).attr('ocean-message'));
+			if (!result){
+				return false;
+			}
+		});
+		
+		$('.oceanDynamicTable .pagination .new').click(function(){
+			selectObject(0);
+		});
 		
 	});
 	
@@ -238,7 +269,6 @@ var reflowTable = function(){
 		$('.oceanDynamicTable table tbody td').each(function(){
 			var index = $(this).index();
 			var header = $(this).closest('table').find('thead th').get(index);
-			console.log($(header).text());
 			$(this).prepend('<span class="mobileLabel">' + $(header).text() + ':</span>');
 		});
 	}
@@ -256,31 +286,40 @@ var showForm = function(objectId){
 		w = $(window).width()*0.9;
 	}
 	
-	$('.oceanDynamicTable tbody td[data-link="' + objectId + '"]').each(function(){
+	var dialogTitle = '';
+	if (objectId == '0')
+		dialogTitle = $('.oceanDynamicForm').attr('ocean-title-new');
+	else
+		dialogTitle = $('.oceanDynamicForm').attr('ocean-title-edit');
+	
+	$('.oceanDynamicTable tbody td[ocean-link="' + objectId + '"]').each(function(){
 		$(this).parent().addClass('selected');
 	});
 	$('.oceanDynamicForm').dialog({
-		title: 'Edit',
+		title: dialogTitle,
 		modal: true,
 		width: w,
 		beforeClose: function(event,ui){
+			deleteCookie("selectedObject");
 			$('.oceanDynamicTable tbody tr[class="selected"]').each(function(){
 				$(this).removeClass('selected');
-				$.removeCookie("selectedObject");
 			});
 		}
 	});
 }
 
 var readCookie = function(cookieName,defaultValue){
-	val = $.cookie(cookieName);
-	console.log("cookie: " + val);
-	if (val === undefined){
+	val = $.cookie('odt-' + cookieName);
+	if (val === undefined || val == ''){
 		return defaultValue;
 	}
 	return val;
 }
 
 var setCookie = function(cookieName,cookieValue){
-	$.cookie(cookieName,cookieValue);
+	$.cookie('odt-' + cookieName,cookieValue,{path:'/'});
+}
+
+var deleteCookie = function(cookieName){
+	$.removeCookie("odt-" + cookieName,{ path: '/' });
 }

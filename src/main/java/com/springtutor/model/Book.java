@@ -8,7 +8,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -33,23 +37,17 @@ public class Book {
 	}
 	
 	@Column(name="title")
-	/**
-	 * 
-	 * @return Naslov knjige
-	 */
+	@NotEmpty(message="Title is mandatory")
 	public String getTitle() {
 		return title;
 	}
 	
-	/**
-	 * 
-	 * @param title Naslov knjige
-	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
 	
 	@Column(name="description")
+	@NotEmpty(message="Description is mandatory")
 	public String getDescription() {
 		return description;
 	}
@@ -59,6 +57,7 @@ public class Book {
 	
 	@DateTimeFormat(pattern="dd.MM.yyyy")
 	@Column(name="release_date")
+	@NotNull(message="Release Date is mandatory")
 	public Date getReleaseDate() {
 		return releaseDate;
 	}
@@ -67,6 +66,8 @@ public class Book {
 	}
 	
 	@Column(name="price")
+	@NotNull(message="Price is mandatory")
+	@Min(value=0, message="Minimal price is 0")
 	public float getPrice() {
 		return price;
 	}
@@ -75,6 +76,8 @@ public class Book {
 	}
 	
 	@Column(name="rating")
+	@Min(value=1, message="Minimal rating is 1")
+	@Max(value=10, message="Maximal rating is 10")
 	public float getRating() {
 		return rating;
 	}

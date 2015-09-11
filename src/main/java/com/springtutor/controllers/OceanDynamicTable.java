@@ -5,16 +5,17 @@ import java.net.URLDecoder;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 public class OceanDynamicTable {
-	
+	private static final String COOKIE_PREFIX = "odt-";
 	private HttpServletRequest request = null;
+	private HttpServletResponse response = null;
 	
-	
-
-	public OceanDynamicTable(HttpServletRequest request) {
+	public OceanDynamicTable(HttpServletRequest request,HttpServletResponse response) {
 		this.request = request;
+		this.response = response;
 	}
 
 	public int getPaginationFirst() {
@@ -33,6 +34,10 @@ public class OceanDynamicTable {
 		return getCookieValue(attributeName + "Search", null);
 	}
 	
+	public void setSelectedObjectId(String id) {
+		setCookieValue("selectedObject", id);
+	}
+	
 	public String getSelectedObjectId() {
 		return getCookieValue("selectedObject", null);
 	}
@@ -40,7 +45,7 @@ public class OceanDynamicTable {
 	private String getCookieValue(String cookieName,String defaultValue) {
 		String value = defaultValue;
 		for (Cookie cookie : request.getCookies()) {
-			if (cookie.getName().equals(cookieName)) {
+			if (cookie.getName().equals(COOKIE_PREFIX + cookieName)) {
 				try {
 					return URLDecoder.decode(cookie.getValue(),"UTF-8");
 				} catch (UnsupportedEncodingException e) {
@@ -49,5 +54,16 @@ public class OceanDynamicTable {
 			}
 		}
 		return value;
+	}
+	
+	private void setCookieValue(String cookieName, String cookieValue) {
+		for (Cookie cookie : request.getCookies()) {
+			if (cookie.getName().equals(COOKIE_PREFIX + cookieName)) {
+				cookie.setValue(cookieValue);
+				cookie.setPath("/");
+				response.addCookie(cookie);
+				break;
+			}
+		}
 	}
 }

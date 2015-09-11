@@ -37,7 +37,7 @@
 		 
 		 <div class="oceanDynamicTable">
 		 	<table data-dataUrl="${urlData}" data-collectionSize="${movies.size()}"
-		 			data-paginationSize="5" data-paginationLabelNext="Next" data-paginationLabelPrev="Prev" 
+		 			data-paginationSize="5" data-paginationLabelNext="Next" data-paginationLabelPrev="Prev" ocean-paginationLabelNew="New Movie"
 		 			data-searchIcon="${urlSearchIcon}" data-noDataMessage="No data" >
 		 		<thead>
 		 			<tr>
