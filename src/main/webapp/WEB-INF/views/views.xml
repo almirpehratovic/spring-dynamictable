@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<definition extends="default" name="books">
+		<put-attribute name="body" value="/WEB-INF/views/books.jsp" />
+		<put-attribute name="pageTitle" value="Books Catalog" />
+	</definition>
+	<definition extends="default" name="movies">
+		<put-attribute name="body" value="/WEB-INF/views/movies.jsp" />
+		<put-attribute name="pageTitle" value="Movies Catalog" />
+	</definition>
+</tiles-definitions>

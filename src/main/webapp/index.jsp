@@ -16,17 +16,17 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				for (cookie in $.cookie()){
-					if (cookie.indexOf('odt-') != -1)
+					if (cookie.indexOf('oc-odt-') != -1)
 						$.removeCookie(cookie,{ path: '/' });
 				}
 			});
 		</script>
 	</head> 
 	<body>
-		<c:url value="/table" var="tableUrl1" />
-		<c:url value="/table2" var="tableUrl2" />
+		<c:url value="/movies" var="tableUrl1" />
+		<c:url value="/books" var="tableUrl2" />
 		
-		<p><a href="${tableUrl1}">Dynamic Table example 1</a></p>
-		<p><a href="${tableUrl2}">Dynamic Table example 2</a></p>
+		<p><a href="${tableUrl1}">Movies</a></p>
+		<p><a href="${tableUrl2}">Books</a></p>
 	</body>
 </html>

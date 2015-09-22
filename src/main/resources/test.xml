@@ -1,0 +1,35 @@
+<ul odm-id="0" odm-level="0">
+	<li odm-level="0" odm-id="1">
+		Entertainment
+		<ul odm-id="1" odm-level="1">
+			<li odm-level="1" odm-id="11" style="display: none;">
+				Books
+				<ul odm-id="11" odm-level="2">
+					<li odm-level="2">
+						<a class="option" href="/DynamicTable/books">Books Catalog</a>
+					</li>
+				</ul>
+			</li>
+			<li odm-level="1" odm-id="12" style="display: none;">
+				Movies
+				<ul odm-id="12" odm-level="2">
+					<li odm-level="2">
+						<a class="option" href="/DynamicTable/movies">Movies Catalog</a>
+					</li>
+				</ul>
+			</li>
+			<li odm-level="1" odm-id="13" style="display: none;">
+				Games
+				<ul odm-id="13" odm-level="2"></ul>
+			</li>
+		</ul>
+	</li>
+	<li odm-level="0" odm-id="2">
+		Work
+		<ul odm-id="2" odm-level="1"></ul>
+	</li>
+	<li odm-level="0" odm-id="3">
+		Family
+		<ul odm-id="3" odm-level="1"></ul>
+	</li>
+</ul>

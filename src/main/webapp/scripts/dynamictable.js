@@ -25,11 +25,11 @@ $(document).ready(function() {
 		
 		// pagination
 		html += '<div class="pagination">';
-		paginationFirst = parseInt(readCookie('paginationFirst','1'));
-		paginationSize = parseInt(readCookie('paginationSize','-1'));
+		paginationFirst = parseInt(readCookie('odt-paginationFirst','1'));
+		paginationSize = parseInt(readCookie('odt-paginationSize','-1'));
 		if (paginationSize == -1){
 			paginationSize = parseInt($(this).attr('ocean-paginationSize'));
-			setCookie("paginationSize",paginationSize);
+			setCookie("odt-paginationSize",paginationSize);
 		}
 		
 		dataUrl = $(this).attr('ocean-dataUrl');
@@ -46,7 +46,7 @@ $(document).ready(function() {
 				$('.prev').click(function(){
 					paginationFirst = paginationFirst-paginationSize;
 					//$('input[name="first"]').val(paginationFirst);
-					setCookie("paginationFirst",paginationFirst);
+					setCookie("odt-paginationFirst",paginationFirst);
 				});
 			};
 		} else {
@@ -72,7 +72,7 @@ $(document).ready(function() {
 			nextButtonFunction = function(){
 				$('.next').click(function(){
 					paginationFirst = paginationFirst+paginationSize;
-					setCookie("paginationFirst",paginationFirst);
+					setCookie("odt-paginationFirst",paginationFirst);
 				});
 			};
 		} else {
@@ -110,11 +110,11 @@ $(document).ready(function() {
 		html += '<div class="search">';
 		
 		html += '<div class="filters">';
-		if (readCookie('HQLSearch','null') != 'null'){
-			html += readCookie('HQLSearch','null');
+		if (readCookie('odt-HQLSearch','null') != 'null'){
+			html += readCookie('odt-HQLSearch','null');
 		} else {
 			$('[ocean-search-property]').each(function(){
-				cookieValue = readCookie($(this).attr('ocean-search-property')+'Search','null');
+				cookieValue = readCookie('odt-'+$(this).attr('ocean-search-property')+'Search','null');
 				if (cookieValue != 'null' && cookieValue != ''){
 					html += $(this).attr('ocean-search-property') + '=' + cookieValue + '; ';
 				}
@@ -122,16 +122,16 @@ $(document).ready(function() {
 		}
 		html += '</div>';
 		
-		html += '<select name="searchField" value="' + readCookie('searchField','') + '">';
+		html += '<select name="searchField" value="' + readCookie('odt-searchField','') + '">';
 		$('[ocean-search-property]').each(function(){
-			if (readCookie('searchField','') == $(this).attr('ocean-search-property')){
+			if (readCookie('odt-searchField','') == $(this).attr('ocean-search-property')){
 				html += '<option value="' + $(this).attr('ocean-search-property') + '" selected>' + $(this).text() + '</option>';
 			} else {
 				html += '<option value="' + $(this).attr('ocean-search-property') + '">' + $(this).text() + '</option>';
 			}
 		});
 		
-		if (readCookie('searchField','') == 'HQL'){
+		if (readCookie('odt-searchField','') == 'HQL'){
 			html += '<option value="HQL" selected>HQL</option>';
 		} else {
 			html += '<option value="HQL">HQL</option>';
@@ -139,7 +139,7 @@ $(document).ready(function() {
 		
 		html += '</select>';
 		html += '<div class="searchInput">';
-		html += '<input type="text" name="searchValue" value="' + readCookie('searchValue','') + '"/>';
+		html += '<input type="text" name="searchValue" value="' + readCookie('odt-searchValue','') + '"/>';
 		html += '<a href="" class="searchLink"><img src="' + searchIcon + '"/></a>';
 		html += '</div>';
 		html += '</div>';
@@ -159,11 +159,11 @@ $(document).ready(function() {
 		
 		// SORT
 		$('.oceanDynamicTable th[ocean-search-property]').each(function(){
-			orderBy = readCookie('orderBy', 'null');
+			orderBy = readCookie('odt-orderBy', 'null');
 			if (orderBy == 'null'){
 				$(this).parents('table[ocean-orderBy]').each(function(){
 					orderBy = $(this).attr('ocean-orderBy');
-					setCookie('orderBy', orderBy);
+					setCookie('odt-orderBy', orderBy);
 				});
 			}
 			
@@ -176,15 +176,15 @@ $(document).ready(function() {
 			}
 		});
 		$('.oceanDynamicTable th[ocean-search-property]').dblclick(function(){
-			orderBy = readCookie('orderBy', 'null');
+			orderBy = readCookie('odt-orderBy', 'null');
 			if (orderBy != 'null' &&  orderBy.indexOf($(this).attr('ocean-search-property')) > -1){
 				if (orderBy.indexOf($(this).attr('ocean-search-property') + ' asc') > -1){
-					setCookie('orderBy', $(this).attr('ocean-search-property') + ' desc');
+					setCookie('odt-orderBy', $(this).attr('ocean-search-property') + ' desc');
 				} else {
-					setCookie('orderBy', $(this).attr('ocean-search-property') + ' asc');
+					setCookie('odt-orderBy', $(this).attr('ocean-search-property') + ' asc');
 				}
 			} else {
-				setCookie('orderBy', $(this).attr('ocean-search-property') + ' asc');
+				setCookie('odt-orderBy', $(this).attr('ocean-search-property') + ' asc');
 			}
 			
 			$('.searchForm:eq(0)').submit();
@@ -196,18 +196,18 @@ $(document).ready(function() {
 		$('.search .searchLink').click(function(){
 			searchField = $('.search select[name="searchField"]').val();
 			searchValue = $('.search input[name="searchValue"]').val();
-			setCookie('searchField', searchField);
-			setCookie(searchField + 'Search', searchValue);
-			setCookie('searchValue', searchValue);
+			setCookie('odt-searchField', searchField);
+			setCookie('odt' + searchField + 'Search', searchValue);
+			setCookie('odt-searchValue', searchValue);
 			$(this).parents('form').submit();
 		});
 		
 		$('.search input[name="searchValue"]').keypress(function(event){
 			if(event.which == 13){
 				searchField = $('.search select[name="searchField"]').val();
-				setCookie('searchField', searchField);
-				setCookie('searchValue', $(this).val());
-				setCookie(searchField + 'Search', $(this).val());
+				setCookie('odt-searchField', searchField);
+				setCookie('odt-searchValue', $(this).val());
+				setCookie('odt-' + searchField + 'Search', $(this).val());
 				$(this).parents('form').submit();
 			}
         });
@@ -218,7 +218,7 @@ $(document).ready(function() {
 		
 		$('.oceanDynamicTable .search select').selectmenu({
 			change: function(event,data){
-				$('.search input').val(readCookie(data.item.value+'Search',''));
+				$('.search input').val(readCookie('odt-'+data.item.value+'Search',''));
 				$(this).val(data.item.value);
 			}
 		});
@@ -226,8 +226,8 @@ $(document).ready(function() {
 		// page size
 		$('.oceanDynamicTable .pagination select').selectmenu({
 			change: function(event,data){
-				setCookie("paginationSize",data.item.value);
-				setCookie('paginationFirst','1');
+				setCookie("odt-paginationSize",data.item.value);
+				setCookie('odt-paginationFirst','1');
 				$(this).parents('form').submit();
 			}
 		});
@@ -237,7 +237,7 @@ $(document).ready(function() {
 			$(this).html('<a href="javascript:selectObject(' + $(this).attr('ocean-link') + ')">'+$(this).text() + '</a>');
 		});
 		
-		selectedObject = readCookie('selectedObject','null');
+		selectedObject = readCookie('odt-selectedObject','null');
 		if (selectedObject != 'null'){
 			showForm(selectedObject);
 		}
@@ -275,7 +275,7 @@ var reflowTable = function(){
 }
 
 var selectObject = function(objectId){
-	setCookie('selectedObject',objectId);
+	setCookie('odt-selectedObject',objectId);
 	$('form:eq(0)').submit();
 }
 
@@ -300,26 +300,10 @@ var showForm = function(objectId){
 		modal: true,
 		width: w,
 		beforeClose: function(event,ui){
-			deleteCookie("selectedObject");
+			deleteCookie("odt-selectedObject");
 			$('.oceanDynamicTable tbody tr[class="selected"]').each(function(){
 				$(this).removeClass('selected');
 			});
 		}
 	});
-}
-
-var readCookie = function(cookieName,defaultValue){
-	val = $.cookie('odt-' + cookieName);
-	if (val === undefined || val == ''){
-		return defaultValue;
-	}
-	return val;
-}
-
-var setCookie = function(cookieName,cookieValue){
-	$.cookie('odt-' + cookieName,cookieValue,{path:'/'});
-}
-
-var deleteCookie = function(cookieName){
-	$.removeCookie("odt-" + cookieName,{ path: '/' });
 }
