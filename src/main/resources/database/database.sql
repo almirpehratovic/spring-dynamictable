@@ -47,3 +47,18 @@ insert into book(title,release_date,price,rating,number_of_reviewers,description
 values ('Alice''s Adventures in Wonderland','1984-05-01',2.99,4.01,9200,'In 1862 Charles Lutwidge Dodgson, a shy Oxford mathematician with a stammer, created a story about a little girl tumbling down a rabbit hole. Thus began the immortal adventures of Alice, perhaps the most popular heroine in English literature. Countless scholars have tried to define the charm of the Alice books–with those wonderfully eccentric characters the Queen of Hearts, Tweedledum, and Tweedledee, the Cheshire Cat, Mock Turtle, the Mad Hatter et al.–by proclaiming that they really comprise a satire on language, a political allegory, a parody of Victorian children’s literature, even a reflection of contemporary ecclesiastical history. Perhaps, as Dodgson might have said, Alice is no more than a dream, a fairy tale about the trials and tribulations of growing up–or down, or all turned round–as seen through the expert eyes of a child.');
 insert into book(title,release_date,price,rating,number_of_reviewers,description)
 values ('Macbeth','2014-11-29',4.99,4.8,347,'Macbeth is a tragedy written by William Shakespeare, and is considered one of his darkest and most powerful works. ');
+
+CREATE TABLE users
+(
+	id int NOT NULL auto_increment primary key,
+  	username character varying(60) NOT NULL,
+  	password character varying(20) NOT NULL,
+  	role character varying(20) NOT NULL,
+  	email character varying(60) NOT NULL,
+  	enabled boolean NOT NULL
+);
+
+insert into users(username,password,role,email,enabled) values ('user1','user1','referent','user1@gmail.com',true);
+insert into users(username,password,role,email,enabled) values ('user2','user2','kontrolor','user2@gmail.com',true);
+insert into users(username,password,role,email,enabled) values ('user3','user3','menadzer','user3@gmail.com',true);
+

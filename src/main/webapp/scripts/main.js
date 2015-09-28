@@ -28,12 +28,12 @@ $(document).ready(function() {
 
 	});
 	
-	if (readCookie('showMenu', '0') == '1'){
+	if (readCookie('showMenu', '0') == '1' && $(window).width() > 480){
 		$('.drawer').trigger('click');
 	}
 });
 
-var createMenu = function(urlRoot,urlMenu){
+var createMenu = function(urlRoot,urlMenu,urlLogout){
 	var level=0, html, lastSubmenu = readCookie('lastParentId', 'null');
 	$('.menu').each(function(){
 		$.ajax({
@@ -42,20 +42,11 @@ var createMenu = function(urlRoot,urlMenu){
 				html = createMenuList(urlRoot,result,level);
 				$('.menu').html(html);
 				if (lastSubmenu != 'null'){
-					transformMenu(html,lastSubmenu);
+					transformMenu(html,lastSubmenu,urlLogout);
 				} else {
 					lastSubmenu = $('.menu ul:eq(0)').attr('odm-id');
-					transformMenu(html,lastSubmenu);
+					transformMenu(html,lastSubmenu,urlLogout);
 				}
-				$('.menu .option').click(function(){
-					for (cookie in $.cookie()){
-						if (cookie.indexOf('oc-odt-') != -1){
-							$.removeCookie(cookie,{ path: '/' });
-						}
-					}
-					setCookie('lastParentId', $(this).parents('ul:eq(0)').attr('odm-id'));
-					return true;
-				});
 			}
 		});
 	});
@@ -77,7 +68,7 @@ var createMenuList = function (urlRoot,menu,level){
 }
 
 // kad kliknemo na opciju ovaj metod se izvrsi opet???
-var transformMenu = function(html,parentId){
+var transformMenu = function(html,parentId,urlLogout){
 	var level = 0;
 	$('.menu').html($('<div />').append(html).find('ul[odm-id="' + parentId + '"]').parent().html());
 	$('.menu').children('ul:eq(0)').each(function(){
@@ -88,6 +79,7 @@ var transformMenu = function(html,parentId){
 				var grandarentId = $(html).find('ul[odm-id="' + parentId + '"]').parents('ul:eq(0)').attr('odm-id');
 				transformMenu(html,grandarentId);
 			});
+			//$(this).append('<li class="logout"><a href="' + urlLogout + '">Logout</a></li>');
 		}
 	});
 	$('.menu li[odm-level="'+(level+1)+'"]').hide();
@@ -98,6 +90,16 @@ var transformMenu = function(html,parentId){
 				transformMenu(html,$(this).attr('odm-id'));
 			});
 		}
+	});
+	
+	$('.menu .option').click(function(){
+		for (cookie in $.cookie()){
+			if (cookie.indexOf('oc-odt-') != -1){
+				$.removeCookie(cookie,{ path: '/' });
+			}
+		}
+		setCookie('lastParentId', $(this).parents('ul:eq(0)').attr('odm-id'));
+		return true;
 	});
 }
 

@@ -5,6 +5,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib prefix="my" uri="https://springtutor.wordpress.com"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -21,6 +22,8 @@
 	var="tagitScript" />
 <spring:url value="/resources/scripts/cookie/jquery.cookie.js"
 	var="cookieScript" />
+	
+<spring:url value="/login" var="urlLogin" />
 
 <html>
 <head>
@@ -39,6 +42,7 @@
 <script src="${dynamicTableScript}"></script>
 </head>
 <body>
+	<security:authorize access="isAuthenticated()">
 	<div class="page">
 		<header>
 			<tiles:insertAttribute name="header" ignore="true" />
@@ -55,5 +59,9 @@
 			</div>
 		</div>
 	</div>
+	</security:authorize>
+	<security:authorize access="isAnonymous()">
+		<p>Unauthorized access. Please <a href="${urlLogin}">login</a></p>
+	</security:authorize>
 </body>
 </html>
