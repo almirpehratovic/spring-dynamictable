@@ -37,7 +37,7 @@ public class MoviesController {
 		
 			
 		if (!model.containsAttribute("movies")) {
-			OceanDynamicTable odt = new OceanDynamicTable(request,response);
+			OceanDynamicTable odt = (OceanDynamicTable) request.getAttribute("odt");
 			model.addAttribute("movies", movieDao.findAll(odt.getPaginationFirst(),odt.getPaginationSize(),
 					odt.getSearchAttribute("id"),odt.getSearchAttribute("name"),odt.getSearchAttribute("description"),
 					odt.getOrderBy()));
@@ -48,8 +48,7 @@ public class MoviesController {
 	@RequestMapping(value="/getMovies",method=RequestMethod.POST)
 	public String showMoviesSearchPagination(Model model,RedirectAttributes redirectAttributes,HttpServletRequest request,HttpServletResponse response) {
 		
-		//System.out.println("ABC  post kontroler " + orderBy );
-		OceanDynamicTable odt = new OceanDynamicTable(request,response);
+		OceanDynamicTable odt = (OceanDynamicTable) request.getAttribute("odt");
 		List<Movie> movies = movieDao.findAll(odt.getPaginationFirst(),odt.getPaginationSize(),
 				odt.getSearchAttribute("id"),odt.getSearchAttribute("name"),odt.getSearchAttribute("description"),
 				odt.getOrderBy());

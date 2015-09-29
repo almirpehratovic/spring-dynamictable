@@ -27,7 +27,7 @@ public class BooksController{
 	private BookDao bookDao;
 	
 	private void setData(Model model,HttpServletRequest request,HttpServletResponse response,boolean isValidationError) {
-		OceanDynamicTable odt = new OceanDynamicTable(request,response);
+		OceanDynamicTable odt = (OceanDynamicTable) request.getAttribute("odt");
 		
 		List<Book> books = new ArrayList<Book>();
 		
@@ -89,7 +89,8 @@ public class BooksController{
 			return "books";
 		} else {
 			bookDao.save(book);
-			(new OceanDynamicTable(request, response)).setSelectedObjectId(String.valueOf(book.getId()));
+			OceanDynamicTable odt = (OceanDynamicTable) request.getAttribute("odt");
+			odt.setSelectedObjectId(String.valueOf(book.getId()));
 			message = new Message("Object sucessfully saved.", "normal");
 			redirectAttributes.addFlashAttribute("formMessage", message);
 			return "redirect:/table2";
@@ -99,7 +100,7 @@ public class BooksController{
 	@RequestMapping(value="/delete",method=RequestMethod.POST)
 	public String delete(Book book,Model model,RedirectAttributes redirectAttributes,HttpServletRequest request, HttpServletResponse response) {
 		bookDao.delete(book);
-		OceanDynamicTable odt = new OceanDynamicTable(request, response);
+		OceanDynamicTable odt = (OceanDynamicTable) request.getAttribute("odt");
 		odt.setSelectedObjectId(null);
 		Message message = new Message("Object sucessfully deleted.", "normal");
 		redirectAttributes.addFlashAttribute("tableMessage", message);
