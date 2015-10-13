@@ -9,13 +9,13 @@
 	<properties>
 
 		<!-- Generic properties -->
-		<java.version>1.6</java.version>
+		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<!-- Spring -->
 		<spring-framework.version>4.2.0.RELEASE</spring-framework.version>
-		<spring.security.version>3.2.1.RELEASE</spring.security.version>
+		<spring.security.version>4.0.2.RELEASE</spring.security.version>
 
 		<!-- Hibernate / JPA -->
 		<hibernate.version>4.2.1.Final</hibernate.version>
@@ -31,6 +31,9 @@
 		<jsp.version>2.2</jsp.version>
 		<jstl.version>1.2</jstl.version>
 		<servlet.version>3.0.1</servlet.version>
+		
+		<maven.compiler.source>1.8</maven.compiler.source>
+  		<maven.compiler.target>1.8</maven.compiler.target>
 
 	</properties>
 

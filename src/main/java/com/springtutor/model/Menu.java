@@ -6,8 +6,8 @@ import java.util.List;
 public class Menu {
 	private String id;
 	private String title;
-	private List<MenuItem> menuItems = new ArrayList<>();
-	private List<Menu> submenus = new ArrayList<>();
+	private List<MenuItem> menuItems = new ArrayList<MenuItem>();
+	private List<Menu> submenus = new ArrayList<Menu>();
 	
 	public Menu() {}
 	

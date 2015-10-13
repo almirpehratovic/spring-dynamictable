@@ -144,6 +144,9 @@ $(document).ready(function() {
 		html += '</div>';
 		html += '</div>';
 		
+		// csrf token is contained in html meta (see default.jsp layout)
+		html += '<input type="hidden" name="_csrf" value="' + $('meta[name="_csrf"]').attr('content') + '" />';
+		
 		html += '</div>'; // actionbar
 		
 		html = '<form class="searchForm" action="' + dataUrl + '" method="POST">' + html + '</form>';

@@ -93,7 +93,7 @@ public class BooksController{
 			odt.setSelectedObjectId(String.valueOf(book.getId()));
 			message = new Message("Object sucessfully saved.", "normal");
 			redirectAttributes.addFlashAttribute("formMessage", message);
-			return "redirect:/table2";
+			return "redirect:/books";
 		}
 	}
 	

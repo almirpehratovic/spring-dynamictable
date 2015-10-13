@@ -29,6 +29,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
+<meta name="_csrf" content="${_csrf.token}">
+<meta name="_csrf_header" content="${_csrf.headerName}">
 <title><tiles:insertAttribute name="pageTitle" ignore="true" /></title>
 
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>

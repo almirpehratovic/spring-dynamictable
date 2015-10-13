@@ -29,24 +29,28 @@
 </script>
 </head>
 <body>
-    <spring:url value="/j_spring_security_check" var="loginUrl" />
-    <spring:url value="/j_spring_security_logout" var="logoutUrl" />
+    <spring:url value="/login" var="loginUrl" />
+    <spring:url value="/logout" var="logoutUrl" />
     <div class="strip">
     	&nbsp;
 	</div>
 	<div class="login">
 		<security:authorize access="isAnonymous()">
 			<form name="loginForm" action="${loginUrl}" method="post">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				<label>Username</label>
-				<input type="text" name="j_username" autofocus"/> <br>
+				<input type="text" name="username" autofocus"/> <br>
 				<label>Password</label>
-				<input type="password" name="j_password" /> <br>
+				<input type="password" name="password" /> <br>
 				<label></label>
 				<input name="submit" type="submit" value="Login" />
 			</form>
 		</security:authorize>
 		<security:authorize access="isAuthenticated()">
-			<a href="${logoutUrl}">Logout</a>
+			<form name="logoutForm" method="post" action="${logoutUrl}">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				<input type="submit" value="Logout" />
+			</form>
 		</security:authorize>
 	</div>
 </body>

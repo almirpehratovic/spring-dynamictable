@@ -26,8 +26,6 @@ public class Interceptor implements HandlerInterceptor{
 	@Override
 	public void postHandle(HttpServletRequest req, HttpServletResponse res,
 			Object handler, ModelAndView modelAndView) throws Exception {
-		req.removeAttribute("odt");
-		modelAndView.addObject("currentDateTime",new Date());
 	}
 
 	@Override
